@@ -1,0 +1,19 @@
+.navBar {
+    background-color: rgb(47, 47, 220);
+    height:auto;
+    width: auto;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: larger;
+}
+
+#nav_item {
+    color: black;
+    text-decoration: none;
+}
+
+.logo {
+    height: 120px;
+    width: 250px;
+    padding-left: 20px;
+    padding-top: 10px;
+}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div id="shark-list">
+    {% for shark in sharks %}
+       <div class="card text-center">
+          <img class="shark-image" src="{{ shark.image_url }}" width="500" height="600">
+          <h5>
+          <!-- <a href="{{ url_for('melon_details', melon_id=melon.melon_id) }}"> -->
+             {{ shark.shark_name }}
+          </a>
+          </h5>
+          {{ shark.price() }}
+          {{ shark.length() }}
+          {{ shark.weight() }}
+          {{ shark.diet() }}
+       </div>
+    {% endfor %}
+    </div>
+{% endblock %}
