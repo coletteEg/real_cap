@@ -1,5 +1,7 @@
 {% extends "base.html" %} 
 {% block body %} 
+<div id="login-box1">
+   <div id="login-box2">
     <form class="logForm" method="post">
        {{form.hidden_tag()}}
        {{form.email.label}}{{form.email()}} 
@@ -7,4 +9,6 @@
        {{form.submit()}}
     </form>
     <button id="register-btn" class="btn btn-outline-success" onclick="location.href='/register'" >New User</button>
+   </div>
+</div>    
 {% endblock %} 

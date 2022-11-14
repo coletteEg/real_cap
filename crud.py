@@ -26,6 +26,9 @@ def get_all_sharks():
 def get_users():
     return User.query.all()    
 
+def get_shark_by_id(shark_id):
+    return Shark.query.get(shark_id)
+
 
 if __name__ == '__main__':
     from server import app

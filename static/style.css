@@ -55,3 +55,21 @@ background-color: blueviolet;
     display: flex;
     flex-wrap: wrap;
  }
+ 
+ #welcome-box {
+    display: flex;
+    justify-content: center;
+ }
+
+ #welcome_shark {
+    background-color: white;
+ }
+
+ #welcome_pic {
+    justify-content: center; 
+ }
+
+ #login-box1 {
+    display:flex;
+    justify-content: center;
+ }

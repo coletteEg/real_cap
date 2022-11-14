@@ -2,6 +2,8 @@
 {% block title %} Register {% endblock %}
 
 {% block body %}
+<div id="register-box">
+    <div>
     <form method="post" action="/register" id="new_user_form">
         {{form.hidden_tag()}}
         {{form.email.label}}{{form.email}}<br>
@@ -9,5 +11,6 @@
         {{form.submit}}
 
     </form>
-
+    </div>
+</div>
 {% endblock %}

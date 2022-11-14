@@ -2,18 +2,18 @@
 
 {% block body %}
 <div id="shark-list">
-    {% for shark in shark %}
+    {% for shark in all_sharks %}
        <div class="card text-center">
-          <img class="shark-image" src="{{ shark.image_url }}" width="500" height="600">
+         <a href="/add_to_cart/{{shark.shark_id}}"><img class="shark-image" src="{{ shark.image_url }}" width="500" height="600"></a>
+          
           <h5>
-          <!-- <a href="{{ url_for('melon_details', melon_id=melon.melon_id) }}"> -->
              {{ shark.shark_name }}
           </a>
           </h5>
-          {{ shark.price() }}
-          {{ shark.length() }}
-          {{ shark.weight() }}
-          {{ shark.diet() }}
+          {{ shark.price }}
+          {{ shark.length }}
+          {{ shark.weight }}
+          {{ shark.diet }}
        </div>
     {% endfor %}
     </div>

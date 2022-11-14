@@ -92,7 +92,7 @@ def show_cart():
    cart = session.get("cart", {})
 
    for shark_id, quantity in cart.items():
-      shark = shark.get_by_id(shark_id)
+      shark = crud.get_shark_by_id(shark_id)
 
       total_cost = quantity * shark.price
       order_total += total_cost
@@ -113,7 +113,7 @@ def add_to_cart(shark_id):
 
    cart[shark_id] = cart.get(shark_id, 0) + 1
    session.modified = True
-   flash(f"Melon {shark_id} successfully added to cart.")
+   flash(f"Shark {shark_id} successfully added to cart.")
    print(cart)
 
    return redirect("/cart")
