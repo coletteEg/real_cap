@@ -17,3 +17,41 @@
     padding-left: 20px;
     padding-top: 10px;
 }
+
+#register-btn {
+   background-color: orange; 
+}
+
+p {
+background-color: blueviolet;
+}
+
+.logForm {
+    padding:15px;
+    margin-bottom: 10%;
+    box-shadow:4px 4px 4px 4px; 
+    width: 55%; 
+    background-color: orange;
+    margin-top: 4%;
+    flex: 20%;
+}
+
+#new_user_form{
+    padding:10px;
+    margin-bottom: 10%;
+    box-shadow:4px 4px 4px 4px; 
+    width: 40%; 
+    background-color: green;
+    border-radius: 5%;
+    margin-top: 3%;
+}
+
+.shark-image {
+    height: 300px;
+    width: 300px;
+ }
+ 
+ #shark-list {
+    display: flex;
+    flex-wrap: wrap;
+ }

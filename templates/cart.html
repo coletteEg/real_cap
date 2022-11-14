@@ -1,0 +1,28 @@
+{% block body %}
+
+   <table class="table table-striped mt-3">
+      <thead>
+      <tr>
+         <th>Shark</th>
+         <th>Quantity</th>
+         <th>Price</th>
+         <th>Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for shark in cart_shark %}
+      <tr>
+         <td>{{ shark.name }}</td>
+         <td>{{ shark.quantity }}</td>
+         <td>${{ "%0.2f" | format(mshark.price) }}</td>
+         <td>${{ "%0.2f" | format(shark.total_cost) }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+   </table>
+
+   <h3>Total: ${{ "%0.2f" | format(order_total) }}</h3>
+
+   <a href="/empty" class="btn btn-primary">Remove All</a>
+
+{% endblock %}

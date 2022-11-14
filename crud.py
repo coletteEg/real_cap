@@ -9,12 +9,13 @@ def find_user(param1):
     user = User.query.filter_by(email = param1).first()
     return(user) 
     
-def create_shark(shark_name, length, weight, diet, image_url):
+def create_shark(shark_name, length, weight, diet, price, image_url):
     new_shark = Shark(
         shark_name=shark_name, 
         length=length, 
         weight=weight, 
         diet=diet,
+        price=price,
         image_url=image_url
     )
     return(new_shark)

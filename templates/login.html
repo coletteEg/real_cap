@@ -1,13 +1,10 @@
-{% extends 'base.html' %}
-
-{% block body %}
-   <h2>Hi there! Go ahead and sign in</h2>
-
-   <form method="POST" action="/login">
-      <div>{{ form.username.label }}: {{ form.username }}</div>
-      <div>{{ form.password.label }}: {{ form.password }}</div>
-      {{ form.csrf_token }}
-      <button class="btn btn-primary" type="submit">Sign In</button>
-   </form>
-
-{% endblock %}
+{% extends "base.html" %} 
+{% block body %} 
+    <form class="logForm" method="post">
+       {{form.hidden_tag()}}
+       {{form.email.label}}{{form.email()}} 
+       {{form.password.label}}{{form.password()}}
+       {{form.submit()}}
+    </form>
+    <button id="register-btn" class="btn btn-outline-success" onclick="location.href='/register'" >New User</button>
+{% endblock %} 

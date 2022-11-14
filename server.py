@@ -1,25 +1,31 @@
 import email
 from wsgiref.util import request_uri
-from flask import (Flask, render_template, request, flash, session, redirect, url_for)
+from flask import Flask, render_template, request, flash, session, redirect, url_for
+from flask_login import login_user, login_required, logout_user, LoginManager
 import os
 
 from sqlalchemy import null
-from model import connect_to_db, db, Shark, User
+from model import Shark, User, db, connect_to_db
 import crud
 from jinja2 import StrictUndefined
-from forms import LoginForm
+from forms import LoginForm, UserForm, AddShark
 
 app = Flask(__name__)
 app.secret_key = 'sharks_are_the_best'
 app.jinja_env.undefined = StrictUndefined
 
-
+login_manager = LoginManager()
+login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return crud.User.query.filter_by(user_id = user_id).first()
 
 @app.route("/")
 def home():
     return render_template ("homepage.html")
 
 @app.route("/sharks")
+@login_required
 def all_sharks():
     all_sharks = crud.get_all_sharks()
     return render_template ("sharks.html", all_sharks = all_sharks)
@@ -29,61 +35,94 @@ def users():
     all_users = crud.get_users()
     return render_template("users.html", all_users=all_users)
 
-@app.route("/users", methods=["POST"])
-def register():
-    user_email = request.form.get("email")
-    user_pass = request.form.get("password")
-    tobechecked = crud.get_user_by_email(user_email)
-    if tobechecked == None:
-        new_user = crud.create_user(user_email, user_pass)
-        db.session.add(new_user)
-        db.session.commit()
-        flash("User Created")
-    else:
-        flash("This email is already being used")
-    return redirect("/")
+@app.route('/confirmed')
+@login_required
+def confirmed_user():
+    return render_template('confirmed.html')
 
-@app.route("/login", methods=["POST", 'GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    user_email = request.form.get("email")
-    user_pass = request.form.get("password")
-    user_q = User.query.filter_by(email = user_email).first()
-    if user_q.email == user_email and user_q.password == user_pass:
-        session['user_id'] = user_q.user_id
-        flash("You are now logged in")
-        
-    else:
-        flash("User not found. Please Register.")
-    return redirect("/")
 
-# @app.route("/login", methods=['GET', 'POST'])
-# def login():
-#     login_form = LoginForm()
-#     email = login_form.email.data
-#     password = login_form.password.data
-#     if login_form.validate_on_submit():
-#         user = crud.find_user(email)
-#         if user:
-#             if user.password == password:
-#                 login_user(user)
-#                 return redirect(url_for('dashboard'))
-#             else:
-#                 flash("No user found. Check your credentials and try again!")
-#                 return redirect(url_for('home'))
-#         else:
-#                 flash("No user found. Check your credentials and try again!")
-#                 return redirect(url_for('home'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+
+        if user.check_password(form.password.data) and user is not None:
+            login_user(user)
+            flash('You have logged in!')
+
+            next = request.args.get('next')
+
+            if next == None or not next[0]=='/':
+                next = url_for('confirmed_user')
+
+            return redirect(next)
+
+    return render_template('login.html',form=form)
+
+# @app.route('/logout')
+# def logout():
+#     if 'user_in' in session:
+#         del session['user_id']
+#         flash('You have logged out')
 #     else:
-#         return redirect(url_for("home"))
+#         flash("Uh oh youre not logged in!")
+#     return redirect('/')
 
-@app.route('/logout')
-def logout():
-    if 'user_in' in session:
-        del session['user_id']
-        flash('You have logged out')
-    else:
-        flash("Uh oh youre not logged in!")
-    return redirect('/')
+@app.route('/register',methods=['GET','POST'])
+def register():
+    form = UserForm()
+
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                    password=form.password.data,
+                    )
+        db.session.add(user)
+        db.session.commit()
+        flash("Thanks for joining us!")
+        return redirect(url_for('login'))
+    return render_template('register.html',form=form)
+
+@app.route("/cart")
+def show_cart():
+
+   order_total = 0
+   cart_shark = []
+
+   cart = session.get("cart", {})
+
+   for shark_id, quantity in cart.items():
+      shark = shark.get_by_id(shark_id)
+
+      total_cost = quantity * shark.price
+      order_total += total_cost
+
+      shark.quantity = quantity
+      shark.total_cost = total_cost
+
+      cart_shark.append(shark)
+
+   return render_template("cart.html", cart_shark=cart_shark, order_total=order_total)
+
+@app.route("/add_to_cart/<shark_id>")
+def add_to_cart(shark_id):
+
+   if 'cart' not in session:
+      session['cart'] = {}
+   cart = session['cart'] 
+
+   cart[shark_id] = cart.get(shark_id, 0) + 1
+   session.modified = True
+   flash(f"Melon {shark_id} successfully added to cart.")
+   print(cart)
+
+   return redirect("/cart")
+
+@app.route("/empty")
+def empty_cart():
+   session["cart"] = {}
+
+   return redirect("/cart")
 
 @app.route("/users/<user_id>")
 def user_details(user_id):
@@ -97,4 +136,4 @@ def notfound(e):
 if __name__== '__main__':
     app.env = 'development'
     connect_to_db(app)
-    app.run(debug=True, port = 5432, host= 'localhost')
+    app.run(debug=True, port = 9000, host= 'localhost')
